@@ -2,3 +2,4 @@
 *.pptx
 *.pyc
 *.swp
+.DS_Store
