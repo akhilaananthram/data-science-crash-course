@@ -7,7 +7,7 @@ from plotly.graph_objs import *
 def read_images():
     data = []
     for i in xrange(1, 28):
-        img = cv2.imread('smilie' + str(i) + '.jpeg')
+        img = cv2.imread('../data/smilie/smilie' + str(i) + '.jpeg')
         data.append(img.flatten())
 
     return np.array(data)
@@ -39,15 +39,6 @@ def pca():
 
     layout = Layout(
             title='PCA Dimensionality Reduction',
-            xaxis=XAxis(
-                title='GDP per Capita',
-                showgrid=False,
-                zeroline=False
-            ),
-            yaxis=YAxis(
-                title='Percent',
-                showline=False
-            )
         )
 
     fig = Figure(data=data, layout=layout)
