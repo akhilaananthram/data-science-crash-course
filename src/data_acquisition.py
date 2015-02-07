@@ -4,6 +4,8 @@ from plotly.graph_objs import *
 import urllib2
 from bs4 import BeautifulSoup
 import sqlite3
+from collections import Counter # For quick counting and sorting
+import pandas as pd # C libraries for efficient tabular data
 
 #CRAWLER: stackexchange questions
 def get_stats(url):
@@ -30,7 +32,7 @@ def getAllLinksOnPage(page):
     response = urllib2.urlopen(page)
     html = response.read()
     soup = BeautifulSoup(html, 'lxml')
-    hrefs = = soup.findAll('a', {'class':"question-hyperlink"})
+    hrefs = soup.findAll('a', {'class':"question-hyperlink"})
 
     links = [h.get('href') for h in hrefs]
 
@@ -76,40 +78,67 @@ def sql_example(database):
 
 #READ DATA
 def read_data(filename):
-    titles = []
-    bodies = []
-    tags = []
-    allTags = {}
-    
-    with file(filename) as f:
-        stream = ""
-        for line in f:
-            line = line.strip()
-            stream = stream + '\n' + line
-            #finished one instance
-            if stream.count('"') == 8:
-                s = stream.split('"')
-                title = s[3]
-                body = s[5]
-                t = set(s[7].split(" "))
+    # titles = []
+    # bodies = []
+    # tags = []
+    # allTags = {}    
+    # with file(filename) as f:
+    #     stream = ""
+    #     for line in f:
+    #         line = line.strip()
+    #         stream = stream + '\n' + line
+    #         #finished one instance
+    #         if stream.count('"') == 8:
+    #             s = stream.split('"')
+    #             title = s[3]
+    #             body = s[5]
+    #             t = set(s[7].split(" "))
                 
-                titles.append(title)
-                bodies.append(body)
-                tags.append(t)
-                for tg in t:
-                    count = allTags.get(tg, 0)
-                    allTags[tg] = count + 1
+    #             titles.append(title)
+    #             bodies.append(body)
+    #             tags.append(t)
+    #             for tg in t:
+    #                 count = allTags.get(tg, 0)
+    #                 allTags[tg] = count + 1
 
-                stream = '"'.join(s[8:])
+    #             stream = '"'.join(s[8:])
+    # orderedTags = sorted(allTags.keys(), key=lambda x:allTags[x], reverse=True)
 
-    print "Sorting"
-    orderedTags = sorted(allTags.keys(), key=lambda x:allTags[x], reverse=True)
+    ####################
+    # Dave Fol - Feb 7 #
+    # Edited read_data to use c libraries (pandas) #
+    ####################
 
-    return titles, bodies, tags, orderedTags
+    #   dataTable is a pandas data frame (numpy array) containing our data
+    print "Reading in "+ filename + " ..." 
+    dataTable = pd.read_csv(filename,names=['index','title','body','tags'],index_col='index')
+
+    #   Our titles, bodies, and tags can now be accessed as elements of dataTable
+    print "Sorting..."
+    titles = dataTable['title']
+    bodies = dataTable['body']
+    tags = dataTable['tags']
+
+    #   An empty list is created to hold all of the tags
+    unorderedTags = []
+
+    #   tags are separated by space so split() is used and the list is exteneded
+    for tagsList in tags: unorderedTags.extend(tagsList.split())
+
+    #   Built in python libraries automaticall count and order our list
+    orderedTags = Counter(unorderedTags)
+
+    ####################
+    # End of Edit      #
+    ####################
+    
+
+    return list(titles), list(bodies), list(tags), orderedTags
 
 def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
     #labels to use
-    Y = set(orderedTags[:num_sets])
+    #Y = set(orderedTags[:num_sets])
+    Y =  set([ x[0] for x in orderedTags.most_common(num_sets)])
 
     simpTitles = []
     simpBodies = []
