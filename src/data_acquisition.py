@@ -3,8 +3,39 @@ import plotly.plotly as py
 from plotly.graph_objs import *
 import urllib2
 from bs4 import BeautifulSoup
+import sqlite3
 
-#CRAWLER
+#CRAWLER: stackexchange questions
+def get_stats(url):
+    response = urllib2.urlopen(url)
+    html = response.read()
+    soup = BeautifulSoup(html, 'lxml')
+
+    #title
+    s = soup.find('h1', {'itemprop':"name"})
+    title = s.get_text()
+    title = title.strip()
+
+    #body
+    s = soup.find('div', {'class':"post-text"})
+    body = s.findChild()
+
+    #tags
+    s = soup.find('div', {'class':"post-taglist"})
+    tags = [c.get_text() for c in s.findChildren()]
+
+    return title, body, tags
+
+def getAllLinksOnPage(page):
+    response = urllib2.urlopen(page)
+    html = response.read()
+    soup = BeautifulSoup(html, 'lxml')
+    hrefs = = soup.findAll('a', {'class':"question-hyperlink"})
+
+    links = [h.get('href') for h in hrefs]
+
+    return links
+
 def crawl(seeds, number_to_collect = 250):
     crawled = set()
     print "Starting Crawling"
@@ -21,15 +52,13 @@ def crawl(seeds, number_to_collect = 250):
         if link in crawled:
             continue
 
-        #link is for a movie
-        if '/m/' in link:
-            title, box_office, reviews = get_stats(link)
-            if reviews != []:
-                with file("crawled.csv", "a") as f:
-                    for r in reviews:
-                        f.write(str(count) + "\t" + r.encode('utf-8') + "\n")
-
-                count += 1
+        #link is for a question
+        if '/questions/' in link:
+            title, body, tags = get_stats(link)
+            instance = '"' + str(count) + '","' + title + '","' + body + '","' + " ".join(tags) + '"'
+            with file("crawled.csv", "a") as f:
+                f.write(instance + "\n")
+            count += 1
 
         crawled.add(link)
         if count == number_to_collect:
@@ -39,6 +68,11 @@ def crawl(seeds, number_to_collect = 250):
         frontier = newLinks + frontier
 
     return sorted(crawled)
+
+#SQL
+def sql_example(database):
+    db = sqlite3.connect(database)
+    db.execute("SELECT * FROM users;")
 
 #READ DATA
 def read_data(filename):
