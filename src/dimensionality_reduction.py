@@ -24,7 +24,7 @@ def pca():
             x=X,
             y=Y,
             mode='markers',
-            name='North America',
+            name='images',
             text=range(1,29),
             marker=Marker(
                 color='rgb(164, 194, 244)',
