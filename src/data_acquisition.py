@@ -114,10 +114,10 @@ def read_data(filename):
     dataTable = pd.read_csv(filename,names=['index','title','body','tags'],index_col='index')
 
     #   Our titles, bodies, and tags can now be accessed as elements of dataTable
-    print "Sorting..."
     titles = dataTable['title']
     bodies = dataTable['body']
     tags = dataTable['tags']
+    tagsSeparated = [x.split() for x in tags]
 
     #   An empty list is created to hold all of the tags
     unorderedTags = []
@@ -133,7 +133,7 @@ def read_data(filename):
     ####################
     
 
-    return list(titles), list(bodies), list(tags), orderedTags
+    return list(titles), list(bodies), tagsSeparated, orderedTags
 
 def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
     #labels to use
@@ -146,21 +146,25 @@ def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
     for t, b, tg in zip(titles, bodies, tags):
         #This instance contains one of the final tags
         #To ensure the categories are separate, it can contain at most one tag
-        if len(tg & Y) == 1:
+        if len(set(tg) & Y) == 1:
             simpTitles.append(t)
             simpBodies.append(b)
-            simpTags.append(list(tg & Y)[0])
+            simpTags.append(list(set(tg) & Y)[0])
 
     return simpTitles, simpBodies, simpTags, Y
 
 def save_data(titles, bodies, tags, file_name="output.csv"):
-    id = 1
-    with file(file_name, 'w') as f:
-        for t, b, tg in zip(titles, bodies, tags):
-            instance = ",".join(['"' + str(id) + '"', '"' + t + '"', '"' + b + '"', '"' + tg + '"'])
-            f.write(instance + "\n")
+    # id = 1
+    # with file(file_name, 'w') as f:
+    #     for t, b, tg in zip(titles, bodies, tags):
+    #         instance = ",".join(['"' + str(id) + '"', '"' + t + '"', '"' + b + '"', '"' + tg + '"'])
+    #         f.write(instance + "\n")
 
-            id += 1
+    #         id += 1
+
+    dataToWrite = pd.DataFrame({'title':titles,'body':bodies,'tags':tags})
+    dataToWrite.index +=1
+    dataToWrite.to_csv(file_name,header=False,columns=['title','body','tags'])
 
 def create_cc_data(input_file, output_file):
     print "Reading in data..."
