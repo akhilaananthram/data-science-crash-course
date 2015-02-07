@@ -2,18 +2,19 @@
 Data Science Crash Course for Cornell Data Science
 
 Topics:
-1. Data Acquisition.
 
-2. Feature Generation.
+1. Data Acquisition
 
-3.  Evaluation.
+2. Feature Generation
 
-4.  Supervised Learning.
+3.  Evaluation
 
-5.  Probabilistic Classifiers.
+4.  Supervised Learning
 
-6.  Clustering.
+5.  Probabilistic Classifiers
 
-7.  Dimensionality Reduction.
+6.  Clustering
 
-8.  Practice Case Study.
+7.  Dimensionality Reduction
+
+8.  Practice Case Study
