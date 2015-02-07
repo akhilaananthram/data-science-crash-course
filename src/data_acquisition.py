@@ -68,6 +68,7 @@ def read_data(filename):
 
                 stream = '"'.join(s[8:])
 
+    print "Sorting"
     orderedTags = sorted(allTags.keys(), key=lambda x:allTags[x], reverse=True)
 
     return titles, bodies, tags, orderedTags
