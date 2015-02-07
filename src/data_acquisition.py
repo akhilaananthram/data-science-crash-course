@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import sqlite3
 from collections import Counter # For quick counting and sorting
 import pandas as pd # C libraries for efficient tabular data
+import csv # for fancy cvs handling like auto quoting
 
 #CRAWLER: stackexchange questions
 def get_stats(url):
@@ -162,9 +163,18 @@ def save_data(titles, bodies, tags, file_name="output.csv"):
 
     #         id += 1
 
-    dataToWrite = pd.DataFrame({'title':titles,'body':bodies,'tags':tags})
+    ####################
+    # Dave Fol - Feb 7 #
+    # Using data frames instead of manual writes #
+    ####################
+
+    dataToWrite = pd.DataFrame({'Title':titles,'Body':bodies,'Tags':tags})
     dataToWrite.index +=1
-    dataToWrite.to_csv(file_name,header=False,columns=['title','body','tags'])
+    dataToWrite.to_csv(file_name,header=True,columns=['Title','Body','Tags'],quoting=csv.QUOTE_ALL,index_label="Id")
+
+    ####################
+    # End of Edit      #
+    ####################
 
 def create_cc_data(input_file, output_file):
     print "Reading in data..."
