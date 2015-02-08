@@ -37,7 +37,7 @@ def tfidf(titles, bodies):
     X = transformer.fit_transform(counts)
     return X, Extractor([bow, transformer])
 
-def n_grams(titles, bodies, n_lower=1, n_upper=2):
+def ngrams(titles, bodies, n_lower=1, n_upper=2):
     corpus = generate_corpus(titles, bodies)
     vectorizer = CountVectorizer(ngram_range=(n_lower, n_upper))
     X = vectorizer.fit_transform(corpus)
