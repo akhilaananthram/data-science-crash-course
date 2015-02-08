@@ -32,7 +32,7 @@ def bag_of_words(titles, bodies):
 
 def tfidf(titles, bodies):
     transformer = TfidfTransformer()
-    counts, bow = bag_of_words(titles, bodies).toarray()
+    counts, bow = bag_of_words(titles, bodies)
 
     X = transformer.fit_transform(counts)
     return X, Extractor([bow, transformer])
