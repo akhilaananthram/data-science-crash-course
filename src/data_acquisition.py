@@ -79,11 +79,7 @@ def sql_example(database):
 
 #READ DATA
 def read_data(filename,maxRows=0):
-    ####################
-    # Dave Fol - Feb 7 #
-    # Edited read_data to use c libraries (pandas) #
-    ####################
-
+    # Edited read_data to use c libraries (pandas)
     if maxRows == 0:
         print "Max Rows not specified, data will be read in full and in chunks"
         chunking = True
@@ -116,11 +112,6 @@ def read_data(filename,maxRows=0):
     #   Built in python libraries automaticall count and order our list
     orderedTags = Counter(unorderedTags)
 
-    ####################
-    # End of Edit      #
-    ####################
-    
-
     return list(titles), list(bodies), tagsSeparated, orderedTags
 
 def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
@@ -142,19 +133,10 @@ def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
     return simpTitles, simpBodies, simpTags, Y
 
 def save_data(titles, bodies, tags, file_name="output.csv"):
-
-    ####################
-    # Dave Fol - Feb 7 #
-    # Using data frames instead of manual writes #
-    ####################
-
+    # Using data frames instead of manual writes
     dataToWrite = pd.DataFrame({'Title':titles,'Body':bodies,'Tags':tags})
     dataToWrite.index +=1
     dataToWrite.to_csv(file_name,header=True,columns=['Title','Body','Tags'],quoting=csv.QUOTE_ALL,index_label="Id")
-
-    ####################
-    # End of Edit      #
-    ####################
 
 def create_cc_data(input_file, output_file,max_input_size=0):
     print "Reading in data..."
