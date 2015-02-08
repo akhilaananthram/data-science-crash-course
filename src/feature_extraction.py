@@ -2,7 +2,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 
 def get_instance(title, body):
-    return t.lower() + " " + b.lower()
+    return title.lower() + " " + body.lower()
 
 def generate_corpus(titles, bodies):
     corpus = [get_instance(t,b) for t, b in zip(titles, bodies)]
