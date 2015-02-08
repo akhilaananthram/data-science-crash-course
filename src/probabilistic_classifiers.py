@@ -11,9 +11,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Probabilistic Classifiers Tutorial')
     parser.add_argument('data', type=str, help="Path to tagged data file")
     parser.add_argument('--feature', dest='feat', type=str, default='bow',
-        options=['bow', 'tfidf', 'bigram', 'trigram'], help="Type of feature to use")
+        choices=['bow', 'tfidf', 'bigram', 'trigram'], help="Type of feature to use")
     parser.add_argument('--classifier', dest='classifier', type=str, default='naive',
-        options=['naive'], help="Type of classifier to use")
+        choices=['naive'], help="Type of classifier to use")
 
     return parser.parse_args()
 
