@@ -1,9 +1,9 @@
 import time
-import plotly.plotly as py
+import plotly.plotly as py # Plotting library
 from plotly.graph_objs import *
-import urllib2
-from bs4 import BeautifulSoup
-import sqlite3
+import urllib2 # Opens URLS
+from bs4 import BeautifulSoup # HTML parser
+import sqlite3 # SQL for python
 from collections import Counter # For quick counting and sorting
 import pandas as pd # C libraries for efficient tabular data
 import csv # for fancy cvs handling like auto quoting
@@ -65,8 +65,9 @@ def crawl(seeds, number_to_collect = 250):
 
         crawled.add(link)
         if count == number_to_collect:
-            return
+            break
 
+        #get new links
         newLinks = getAllLinksOnPage(link)
         frontier = newLinks + frontier
 
