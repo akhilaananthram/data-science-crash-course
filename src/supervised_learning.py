@@ -42,6 +42,8 @@ if __name__=="__main__":
     else:
         X, extractor = fe.ngrams(X_train_t, X_train_b, n_upper=3)
 
+    test = [extractor.transform(t, b) for t,b in X_test]
+
     print "Train..."
     if args.classifier == "knn":
         classifier = KNeighborsClassifier(n_neighbors=3)
@@ -49,12 +51,15 @@ if __name__=="__main__":
         classifier = LogisticRegression(C=1e5)
     elif args.classifier == "dec-tree":
         classifier = DecisionTreeClassifier()
+        #Decision Tree does not work with sparse vectors
+        X = X.toarray()
+        test = [t.toarray() for t in test]
     else:
         classifier = svm.SVC()
 
     classifier.fit(X, y_train)
 
     print "Test..."
-    predictions = [classifier.predict(extractor.transform(t, b))[0] for t,b in X_test]
+    predictions = [classifier.predict(t)[0] for t in test]
 
     evaluation.confusion_matrix(y_test, predictions)

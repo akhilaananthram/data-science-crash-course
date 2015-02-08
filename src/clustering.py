@@ -35,3 +35,6 @@ def cluster_image():
     clustered = np.array(clustered, dtype=np.uint8)
 
     cv2.imshow("clustered image", np.reshape(clustered, (w, h, c)))
+
+if __name__=="__main__":
+    cluster_image()

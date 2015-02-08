@@ -44,3 +44,6 @@ def pca():
 
     fig = Figure(data=data, layout=layout)
     plot_url = py.plot(fig, filename='PCA')
+
+if __name__=="__main__":
+    pca()
