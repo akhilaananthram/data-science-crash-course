@@ -14,7 +14,7 @@ class Extractor:
 
     def transform(self, title, body):
         X = [get_instance(title, body)]
-        for v in vectorizers:
+        for v in self.vectorizers:
             X = v.transform(X)
 
         return X

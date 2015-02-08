@@ -14,6 +14,8 @@ def parse_args():
         choices=['bow', 'tfidf', 'bigram', 'trigram'], help="Type of feature to use")
     parser.add_argument('--classifier', dest='classifier', type=str, default='naive',
         choices=['naive'], help="Type of classifier to use")
+    parser.add_argument('--maxRows', dest='maxRows', type=int, default=0,
+        help="Max rows from file to read in")
 
     return parser.parse_args()
 
@@ -21,7 +23,7 @@ if __name__=="__main__":
     args = parse_args()
 
     print "Reading data..."
-    titles, bodies, tags_sets, _ = da.read_data(args.data)
+    titles, bodies, tags_sets, _ = da.read_data(args.data, args.maxRows)
     tags = [list(t)[0] for t in tags_sets]
 
     X_train, X_test, y_train, y_test = evaluation.cross_validation(zip(titles, bodies), tags)
