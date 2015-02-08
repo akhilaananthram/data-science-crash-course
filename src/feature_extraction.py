@@ -1,15 +1,18 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 
+def get_instance(title, body):
+    return t.lower() + " " + b.lower()
+
 def generate_corpus(titles, bodies):
-    corpus = [t.lower() + " " + b.lower() for t, b in zip(titles, bodies)]
+    corpus = [get_instance(t,b) for t, b in zip(titles, bodies)]
 
 class Extractor:
     def __init__(self, vectorizers):
         self.vectorizers = vectorizers
 
     def transform(self, title, body):
-        X = generate_corpus(title, body)
+        X = [get_instance(title, body)]
         for v in vectorizers:
             X = v.transform(X)
 
