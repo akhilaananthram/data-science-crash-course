@@ -6,6 +6,7 @@ def get_instance(title, body):
 
 def generate_corpus(titles, bodies):
     corpus = [get_instance(t,b) for t, b in zip(titles, bodies)]
+    return corpus
 
 class Extractor:
     def __init__(self, vectorizers):
