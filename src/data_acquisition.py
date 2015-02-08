@@ -78,41 +78,28 @@ def sql_example(database):
     db.execute("SELECT * FROM users;")
 
 #READ DATA
-def read_data(filename):
-    # titles = []
-    # bodies = []
-    # tags = []
-    # allTags = {}    
-    # with file(filename) as f:
-    #     stream = ""
-    #     for line in f:
-    #         line = line.strip()
-    #         stream = stream + '\n' + line
-    #         #finished one instance
-    #         if stream.count('"') == 8:
-    #             s = stream.split('"')
-    #             title = s[3]
-    #             body = s[5]
-    #             t = set(s[7].split(" "))
-                
-    #             titles.append(title)
-    #             bodies.append(body)
-    #             tags.append(t)
-    #             for tg in t:
-    #                 count = allTags.get(tg, 0)
-    #                 allTags[tg] = count + 1
-
-    #             stream = '"'.join(s[8:])
-    # orderedTags = sorted(allTags.keys(), key=lambda x:allTags[x], reverse=True)
-
+def read_data(filename,maxRows=0):
     ####################
     # Dave Fol - Feb 7 #
     # Edited read_data to use c libraries (pandas) #
     ####################
 
+    if maxRows == 0:
+        print "Max Rows not specified, data will be read in full and in chunks"
+        chunking = True
+    else:
+        print "Max Rows:" + str(maxRows)
+        print "No chunking will occur"
+        chunking = False
+
+
     #   dataTable is a pandas data frame (numpy array) containing our data
     print "Reading in "+ filename + " ..." 
-    dataTable = pd.read_csv(filename,names=['index','title','body','tags'],index_col='index')
+    if chunking:
+        tp = pd.read_csv(filename,names=['index','title','body','tags'],index_col='index',iterator=True,chunksize=5000)
+        dataTable = pd.concat(tp, ignore_index=True)
+    else:
+        dataTable = pd.read_csv(filename,names=['index','title','body','tags'],index_col='index',nrows=maxRows)
 
     #   Our titles, bodies, and tags can now be accessed as elements of dataTable
     titles = dataTable['title']
@@ -155,13 +142,6 @@ def simplify_data(titles, bodies, tags, orderedTags, num_sets=2):
     return simpTitles, simpBodies, simpTags, Y
 
 def save_data(titles, bodies, tags, file_name="output.csv"):
-    # id = 1
-    # with file(file_name, 'w') as f:
-    #     for t, b, tg in zip(titles, bodies, tags):
-    #         instance = ",".join(['"' + str(id) + '"', '"' + t + '"', '"' + b + '"', '"' + tg + '"'])
-    #         f.write(instance + "\n")
-
-    #         id += 1
 
     ####################
     # Dave Fol - Feb 7 #
@@ -176,10 +156,10 @@ def save_data(titles, bodies, tags, file_name="output.csv"):
     # End of Edit      #
     ####################
 
-def create_cc_data(input_file, output_file):
+def create_cc_data(input_file, output_file,max_input_size=0):
     print "Reading in data..."
     start = time.time()
-    titles, bodies, tags, orderedTags = read_data(input_file)
+    titles, bodies, tags, orderedTags = read_data(input_file,max_input_size)
     end = time.time()
     print end - start
     print "Simplifying data..."
