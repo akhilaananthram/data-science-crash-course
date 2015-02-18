@@ -104,13 +104,10 @@ def read_data(filename,maxRows=0):
     tags = dataTable['tags']
     tagsSeparated = [x.split() for x in tags]
 
-    #   An empty list is created to hold all of the tags
-    unorderedTags = []
+    #   tags are separated by space so split() is used and the list is extended
+    unorderedTags = [tagsList.split() for tagsList in tags]
 
-    #   tags are separated by space so split() is used and the list is exteneded
-    for tagsList in tags: unorderedTags.extend(tagsList.split())
-
-    #   Built in python libraries automaticall count and order our list
+    #   Built in python libraries automatically count and order our list
     orderedTags = Counter(unorderedTags)
 
     return list(titles), list(bodies), tagsSeparated, orderedTags
