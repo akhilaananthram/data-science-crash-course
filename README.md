@@ -18,3 +18,5 @@ Topics:
 7.  Dimensionality Reduction
 
 8.  Practice Case Study
+
+For access to the powerpoint and notes, please visit: https://www.dropbox.com/sh/iatbbv5xqxk70sf/AAAuD9gswTbY_BzN_SILbuNxa?dl=0
